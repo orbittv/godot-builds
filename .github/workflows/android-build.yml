@@ -15,7 +15,6 @@ jobs:
       - name: Checkout custom profile
         uses: actions/checkout@v4
 
-      # Скачиваем исходники Godot через проверенный официальный экшен
       - name: Clone Godot Engine Source
         uses: actions/checkout@v4
         with:
@@ -24,8 +23,9 @@ jobs:
           path: 'godot-source'
           fetch-depth: 1
 
+      # Обновили с v4 на v5, что убирает второй варнинг
       - name: Set up Java Sdk
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
