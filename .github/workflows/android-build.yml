@@ -23,7 +23,6 @@ jobs:
           path: 'godot-source'
           fetch-depth: 1
 
-      # Обновили с v4 на v5, что убирает второй варнинг
       - name: Set up Java Sdk
         uses: actions/setup-java@v5
         with:
@@ -50,12 +49,21 @@ jobs:
             echo "Внимание: custom.py не найден в корне репозитория, сборка пройдет со стандартными настройками."
           fi
 
-      - name: Build Android Template (ARM64)
+      # Шаг 1: Собираем релизный шаблон
+      - name: Build Android Template (Release - ARM64)
         run: |
           cd godot-source
           export ANDROID_NDK_ROOT=$ANDROID_HOME/ndk-bundle
           scons platform=android target=template_release arch=arm64 generate_apk=yes
 
+      # Шаг 2: Собираем дебаг шаблон
+      - name: Build Android Template (Debug - ARM64)
+        run: |
+          cd godot-source
+          export ANDROID_NDK_ROOT=$ANDROID_HOME/ndk-bundle
+          scons platform=android target=template_debug arch=arm64 generate_apk=yes
+
+      # Шаг 3: Выгружаем оба APK файла
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
