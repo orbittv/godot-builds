@@ -1,0 +1,32 @@
+name: Build Custom 2D Android Template
+
+on:
+  workflow_dispatch: # Это ключевая строка, которая создает кнопку ручного запуска!
+    inputs:
+      godot_version:
+        description: 'Версия Godot (например, 4.7.2-stable)'
+        required: true
+        default: '4.7.2-stable'
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Build Godot Android Template
+        uses: appsinacup/action_godot_builder@v1
+        with:
+          version: ${{ github.event.inputs.godot_version }}
+          platform: android
+          target: template_release
+          # Скрипт автоматически подхватит ваш файл custom.py, если он лежит в корне репозитория!
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-android-2d-template
+          path: |
+            ./bin/*.apk
+            ./bin/*.aar
