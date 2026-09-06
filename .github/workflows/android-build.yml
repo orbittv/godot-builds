@@ -34,9 +34,9 @@ jobs:
 
       - name: Clone Godot Engine Source
         run: |
-          # Очищаем суффикс -stable для тега гита, если он указан
-          VERSION_TAG=$(echo "${{ github.event.inputs.godot_version }}" | sed 's/-stable//')
-          git clone --depth 1 --branch $VERSION_TAG https://github.com godot-source
+          # Передаем введенную версию напрямую в качестве тега
+          VERSION_TAG="${{ github.event.inputs.godot_version }}"
+          git clone --depth 1 --branch "$VERSION_TAG" https://github.com godot-source
 
       - name: Copy Custom Profile
         run: |
