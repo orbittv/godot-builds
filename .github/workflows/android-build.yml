@@ -12,8 +12,17 @@ jobs:
   build-android:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source code
+      - name: Checkout custom profile
         uses: actions/checkout@v4
+
+      # Скачиваем исходники Godot через проверенный официальный экшен
+      - name: Clone Godot Engine Source
+        uses: actions/checkout@v4
+        with:
+          repository: 'godotengine/godot'
+          ref: ${{ github.event.inputs.godot_version }}
+          path: 'godot-source'
+          fetch-depth: 1
 
       - name: Set up Java Sdk
         uses: actions/setup-java@v4
@@ -32,13 +41,6 @@ jobs:
       - name: Install SCons
         run: pip install scons
 
-      - name: Clone Godot Engine Source
-        env:
-          GODOT_VERSION: ${{ github.event.inputs.godot_version }}
-        run: |
-          # Теперь переменная гарантированно стабильна и безопасна для Git
-          git clone --depth 1 --branch "$GODOT_VERSION" https://github.com godot-source
-
       - name: Copy Custom Profile
         run: |
           if [ -f "./custom.py" ]; then
@@ -51,6 +53,7 @@ jobs:
       - name: Build Android Template (ARM64)
         run: |
           cd godot-source
+          export ANDROID_NDK_ROOT=$ANDROID_HOME/ndk-bundle
           scons platform=android target=template_release arch=arm64 generate_apk=yes
 
       - name: Upload Artifact
