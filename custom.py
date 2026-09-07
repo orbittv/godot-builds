@@ -4,7 +4,7 @@ debug_symbols = "no"
 
 # Отключаем 3D подсистему и тяжелые модули
 disable_3d = "yes"
-disable_advanced_gui = "yes"
+#disable_advanced_gui = "yes"
 
 # Отключаем модули, которые не нужны в 2D игре
 module_basis_universal_enabled = "no"
